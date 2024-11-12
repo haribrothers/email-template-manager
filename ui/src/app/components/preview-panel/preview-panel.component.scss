@@ -1,0 +1,58 @@
+:host {
+    display: block;
+    height: 100%;
+  }
+  .preview-content {
+    font-family: inherit;
+  }
+  .preview-content :is(h1, h2, h3, h4, h5, h6) {
+    font-weight: 600;
+    line-height: 1.25;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+  }
+  .preview-content h1 { font-size: 2em; }
+  .preview-content h2 { font-size: 1.5em; }
+  .preview-content h3 { font-size: 1.25em; }
+  .preview-content p {
+    margin: 1em 0;
+  }
+  .preview-content ul, .preview-content ol {
+    margin: 1em 0;
+    padding-left: 2em;
+  }
+  .preview-content ul { list-style-type: disc; }
+  .preview-content ol { list-style-type: decimal; }
+  .preview-content table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+  }
+  .preview-content th, .preview-content td {
+    border: 1px solid #e2e8f0;
+    padding: 0.5em;
+  }
+  .preview-content th {
+    background-color: #f8fafc;
+    font-weight: 600;
+  }
+  .preview-content pre, .preview-content code {
+    background-color: #f8fafc;
+    border-radius: 0.25em;
+    padding: 0.2em 0.4em;
+    font-family: ui-monospace, monospace;
+  }
+  .preview-content pre {
+    padding: 1em;
+    overflow-x: auto;
+  }
+  .preview-content pre code {
+    padding: 0;
+    background-color: transparent;
+  }
+  .preview-content blockquote {
+    border-left: 4px solid #e2e8f0;
+    margin: 1em 0;
+    padding-left: 1em;
+    color: #64748b;
+  }

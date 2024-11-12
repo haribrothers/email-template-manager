@@ -1,0 +1,183 @@
+{
+  "templates": [
+    {
+      "id": "t1",
+      "name": "Welcome Email",
+      "content": "Hello {{userName}},\n\nWelcome to {{companyName}}! We're excited to have you on board.\n\n{{>footer}}",
+      "variables": [
+        {
+          "id": "v1",
+          "name": "userName",
+          "type": "string",
+          "defaultValue": "there",
+          "description": "Recipient's name",
+          "required": true
+        },
+        {
+          "id": "v2",
+          "name": "companyName",
+          "type": "string",
+          "defaultValue": "Our Platform",
+          "description": "Company name",
+          "required": true
+        }
+      ],
+      "createdAt": "2023-12-01T00:00:00.000Z",
+      "updatedAt": "2023-12-01T00:00:00.000Z"
+    },
+    {
+      "id": "t2",
+      "name": "Order Confirmation",
+      "content": "Dear {{customerName}},\n\nThank you for your order!\n\nOrder Details:\n{{#each orderItems}}\n- {{name}}: ${{price}}\n{{/each}}\n\nTotal: ${{orderTotal}}\n\n{{>orderFooter}}",
+      "variables": [
+        {
+          "id": "v3",
+          "name": "customerName",
+          "type": "string",
+          "defaultValue": "valued customer",
+          "description": "Customer's name",
+          "required": true
+        },
+        {
+          "id": "v4",
+          "name": "orderItems",
+          "type": "array",
+          "defaultValue": [],
+          "description": "List of ordered items",
+          "required": true
+        },
+        {
+          "id": "v5",
+          "name": "orderTotal",
+          "type": "number",
+          "defaultValue": 0,
+          "description": "Total order amount",
+          "required": true
+        }
+      ],
+      "createdAt": "2023-12-01T00:00:00.000Z",
+      "updatedAt": "2023-12-01T00:00:00.000Z"
+    },
+    {
+      "id": "t3",
+      "name": "Password Reset",
+      "content": "Hi {{userName}},\n\nWe received a request to reset your password. Click the link below to reset it:\n\n{{resetLink}}\n\nIf you didn't request this, please ignore this email.\n\n{{>securityFooter}}",
+      "variables": [
+        {
+          "id": "v1",
+          "name": "userName",
+          "type": "string",
+          "defaultValue": "there",
+          "description": "Recipient's name",
+          "required": true
+        },
+        {
+          "id": "v6",
+          "name": "resetLink",
+          "type": "string",
+          "defaultValue": "https://example.com/reset",
+          "description": "Password reset link",
+          "required": true
+        }
+      ],
+      "createdAt": "2023-12-01T00:00:00.000Z",
+      "updatedAt": "2023-12-01T00:00:00.000Z"
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "userName",
+      "type": "string",
+      "defaultValue": "there",
+      "description": "Recipient's name",
+      "required": true,
+      "createdAt": "2023-12-01T00:00:00.000Z",
+      "updatedAt": "2023-12-01T00:00:00.000Z"
+    },
+    {
+      "id": "v2",
+      "name": "companyName",
+      "type": "string",
+      "defaultValue": "Our Platform",
+      "description": "Company name",
+      "required": true,
+      "createdAt": "2023-12-01T00:00:00.000Z",
+      "updatedAt": "2023-12-01T00:00:00.000Z"
+    },
+    {
+      "id": "v3",
+      "name": "customerName",
+      "type": "string",
+      "defaultValue": "valued customer",
+      "description": "Customer's name",
+      "required": true,
+      "createdAt": "2023-12-01T00:00:00.000Z",
+      "updatedAt": "2023-12-01T00:00:00.000Z"
+    },
+    {
+      "id": "v4",
+      "name": "orderItems",
+      "type": "array",
+      "defaultValue": [
+        {
+          "name": "Sample Product",
+          "price": 99.99
+        }
+      ],
+      "description": "List of ordered items",
+      "required": true,
+      "createdAt": "2023-12-01T00:00:00.000Z",
+      "updatedAt": "2023-12-01T00:00:00.000Z"
+    },
+    {
+      "id": "v5",
+      "name": "orderTotal",
+      "type": "number",
+      "defaultValue": 99.99,
+      "description": "Total order amount",
+      "required": true,
+      "createdAt": "2023-12-01T00:00:00.000Z",
+      "updatedAt": "2023-12-01T00:00:00.000Z"
+    },
+    {
+      "id": "v6",
+      "name": "resetLink",
+      "type": "string",
+      "defaultValue": "https://example.com/reset",
+      "description": "Password reset link",
+      "required": true,
+      "createdAt": "2023-12-01T00:00:00.000Z",
+      "updatedAt": "2023-12-01T00:00:00.000Z"
+    }
+  ],
+  "partials": [
+    {
+      "id": "p1",
+      "name": "footer",
+      "content": "Best regards,\nThe {{companyName}} Team\n\nContact us: support@example.com",
+      "description": "Standard email footer",
+      "category": "general",
+      "createdAt": "2023-12-01T00:00:00.000Z",
+      "updatedAt": "2023-12-01T00:00:00.000Z"
+    },
+    {
+      "id": "p2",
+      "name": "orderFooter",
+      "content": "For any questions about your order, please contact our support team.\n\nOrder ID: {{orderId}}\nTracking Number: {{trackingNumber}}",
+      "description": "Footer for order-related emails",
+      "category": "orders",
+      "createdAt": "2023-12-01T00:00:00.000Z",
+      "updatedAt": "2023-12-01T00:00:00.000Z"
+    },
+    {
+      "id": "p3",
+      "name": "securityFooter",
+      "content": "This email was sent by {{companyName}} for security purposes.\nIf you didn't request this action, please contact support immediately.",
+      "description": "Footer for security-related emails",
+      "category": "security",
+      "createdAt": "2023-12-01T00:00:00.000Z",
+      "updatedAt": "2023-12-01T00:00:00.000Z"
+    }
+  ]
+}

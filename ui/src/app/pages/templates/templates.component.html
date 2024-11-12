@@ -1,0 +1,43 @@
+<div class="flex h-screen overflow-hidden">
+    <!-- Template List -->
+    <div class="w-64 border-r bg-white p-4">
+        <div class="mb-4">
+            <button class="w-full bg-primary-600 text-white px-4 py-2 rounded flex justify-center gap-2"
+                (click)="createTemplate()">
+                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                    width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M5 12h14m-7 7V5" />
+                </svg>
+                New Template
+            </button>
+        </div>
+
+        <div class="space-y-2">
+            @for (template of templates$ | async; track template.id) {
+            <a class="p-2 block hover:bg-gray-100 cursor-pointer rounded"
+                [class.bg-primary-50]="template.id === (selectedId$ | async)" (click)="selectTemplate(template.id)">
+                {{ template.name || 'Untitled Template' }}
+            </a>
+            }
+        </div>
+    </div>
+
+    <!-- Editor and Preview -->
+    <div class="flex-1 flex flex-col">
+        @if (selectedTemplate$ | async; as template) {
+        <div class="p-4 border-b w-full">
+            <input type="text" [value]="template.name" (input)="updateTemplateName($event, template)"
+                class="w-full px-4 py-2 border rounded" placeholder="Template Name">
+        </div>
+        <div class="flex-1 flex flex-col gap-4 p-4 overflow-hidden">
+            <app-editor class="flex-1 overflow-hidden" [content]="template.content" (contentChange)="updateTemplateContent($event, template)" />
+            <app-preview-panel class="flex-1 overflow-hidden" [template]="template" />
+        </div>
+        } @else {
+        <div class="flex-1 flex items-center justify-center text-gray-500">
+            Select a template or create a new one to start editing
+        </div>
+        }
+    </div>
+</div>
