@@ -17,6 +17,7 @@ export class TemplatesComponent implements OnInit {
   templates$ = this.templateService.templates$;
   selectedId$ = this.templateService.selectedId$;
   selectedTemplate$ = this.templateService.selectedTemplate$;
+  showPreview = false;
 
   constructor(
     private readonly templateService: TemplateService,

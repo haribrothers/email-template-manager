@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 import { Template, TemplateVariable } from '../models/template.model';
 import { VariableService } from './variable.service';
 import { PartialService } from './partial.service';
@@ -12,6 +13,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 export class TemplateService {
   private templates = new BehaviorSubject<Template[]>([]);
   private selectedTemplateId = new BehaviorSubject<string | null>(null);
+  private apiUrl = 'http://localhost:3000/api';
 
   templates$ = this.templates.asObservable();
   selectedId$ = this.selectedTemplateId.asObservable();
@@ -48,6 +50,7 @@ export class TemplateService {
       this.registerPartials();
     });
   }
+
 
   private registerPartials() {
     // Unregister all existing partials

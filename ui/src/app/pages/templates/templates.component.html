@@ -26,18 +26,39 @@
     <!-- Editor and Preview -->
     <div class="flex-1 flex flex-col">
         @if (selectedTemplate$ | async; as template) {
-        <div class="p-4 border-b w-full">
-            <input type="text" [value]="template.name" (input)="updateTemplateName($event, template)"
-                class="w-full px-4 py-2 border rounded" placeholder="Template Name">
-        </div>
-        <div class="flex-1 flex flex-col gap-4 p-4 overflow-hidden">
-            <app-editor class="flex-1 overflow-hidden" [content]="template.content" (contentChange)="updateTemplateContent($event, template)" />
-            <app-preview-panel class="flex-1 overflow-hidden" [template]="template" />
-        </div>
+            <div class="p-4 border-b w-full">
+                <input type="text" [value]="template.name" (input)="updateTemplateName($event, template)"
+                    class="w-full px-4 py-2 border rounded" placeholder="Template Name">
+            </div>
+            <div class="flex-1 flex flex-col gap-4 p-4 overflow-hidden">
+                <div class="flex items-center gap-2 border-b">
+                    <button 
+                      class="px-3 py-1 text-sm border-b-4"
+                      [class.border-transparent]="showPreview"
+                      [class.border-primary-500]="!showPreview"
+                      [class.text-primary-700]="!showPreview"
+                      (click)="showPreview = false;">
+                      Editor
+                    </button>
+                    <button 
+                      class="px-3 py-1 text-sm border-b-4 border-transparent"
+                      [class.border-transparent]="!showPreview"
+                      [class.border-primary-500]="showPreview"
+                      [class.text-primary-700]="showPreview"
+                      (click)="showPreview = true;">
+                      Preview
+                    </button>
+                </div>
+                @if (!showPreview) {
+                    <app-editor class="flex-1 overflow-hidden" [content]="template.content" (contentChange)="updateTemplateContent($event, template)" />
+                } @else {
+                    <app-preview-panel class="flex-1 overflow-hidden" [template]="template" />
+                }
+            </div>
         } @else {
-        <div class="flex-1 flex items-center justify-center text-gray-500">
-            Select a template or create a new one to start editing
-        </div>
+            <div class="flex-1 flex items-center justify-center text-gray-500">
+                Select a template or create a new one to start editing
+            </div>
         }
     </div>
 </div>
