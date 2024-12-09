@@ -1,15 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-
-export interface TemplatePartial {
-  id: string;
-  name: string;
-  content: string;
-  description?: string;
-  category?: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { TemplatePartial } from '../models/template.model';
 
 @Injectable({
   providedIn: 'root'

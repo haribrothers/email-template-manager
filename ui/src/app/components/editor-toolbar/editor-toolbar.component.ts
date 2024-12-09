@@ -1,12 +1,12 @@
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Editor } from '@tiptap/core';
-import { PartialService, TemplatePartial } from '../../services/partial.service';
+import { PartialService } from '../../services/partial.service';
 import { Color } from '@tiptap/extension-color';
 import { TextStyle } from '@tiptap/extension-text-style';
 import { FormsModule } from '@angular/forms';
 import { VariableService } from 'src/app/services/variable.service';
-import { TemplateVariable } from 'src/app/models/template.model';
+import { TemplatePartial, TemplateVariable } from 'src/app/models/template.model';
 
 @Component({
   selector: 'app-editor-toolbar',

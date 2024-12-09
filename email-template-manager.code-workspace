@@ -1,11 +1,27 @@
 {
-	"folders": [
-		{
-			"path": "ui"
-		},
-		{
-			"path": "server"
-		}
-	],
-	"settings": {}
+    "folders": [
+        {
+            "name": "📱 UI",
+            "path": "ui"
+        },
+        {
+            "name": "⚙️ Server",
+            "path": "server"
+        }
+    ],
+    "settings": {
+        "typescript.tsdk": "ui/node_modules/typescript/lib",
+        "editor.formatOnSave": true,
+        // "editor.codeActionsOnSave": {
+        //     "source.fixAll.eslint": true
+        // }
+    },
+    // "extensions": {
+    //     "recommendations": [
+    //         "angular.ng-template",
+    //         "dbaeumer.vscode-eslint",
+    //         "esbenp.prettier-vscode",
+    //         "ms-vscode.vscode-typescript-tslint-plugin"
+    //     ]
+    // }
 }

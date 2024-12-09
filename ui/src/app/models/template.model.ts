@@ -15,3 +15,13 @@ export interface TemplateVariable {
   description?: string;
   required: boolean;
 }
+
+export interface TemplatePartial {
+  id: string;
+  name: string;
+  content: string;
+  description?: string;
+  category?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
