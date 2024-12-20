@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
 import { Template, TemplateVariable } from '../models/template.model';
 import { VariableService } from './variable.service';
 import { PartialService } from './partial.service';
+import { ObjectPathService } from './object-path.service';
 import * as Handlebars from 'handlebars';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
@@ -13,7 +13,6 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 export class TemplateService {
   private templates = new BehaviorSubject<Template[]>([]);
   private selectedTemplateId = new BehaviorSubject<string | null>(null);
-  private apiUrl = 'http://localhost:3000/api';
 
   templates$ = this.templates.asObservable();
   selectedId$ = this.selectedTemplateId.asObservable();
@@ -34,26 +33,21 @@ export class TemplateService {
   constructor(
     private variableService: VariableService,
     private partialService: PartialService,
+    private objectPathService: ObjectPathService,
     private sanitizer: DomSanitizer
   ) {
-    // Load templates from storage
     const savedTemplates = localStorage.getItem('templates');
     if (savedTemplates) {
       this.templates.next(JSON.parse(savedTemplates));
     }
 
-    // Register all partials with Handlebars
     this.registerPartials();
-
-    // Subscribe to partial changes to update registrations
     this.partialService.partials$.subscribe(() => {
       this.registerPartials();
     });
   }
 
-
   private registerPartials() {
-    // Unregister all existing partials
     const partialNames = Object.keys(Handlebars.partials);
     partialNames.forEach(name => {
       Handlebars.unregisterPartial(name);
@@ -61,8 +55,6 @@ export class TemplateService {
     
     const partials = this.partialService.getPartials();
     partials.forEach(partial => {
-      // Register each partial with Handlebars
-      // The name must not contain spaces or special characters
       const safeName = partial.name.replace(/[^a-zA-Z0-9]/g, '_');
       Handlebars.registerPartial(safeName, partial.content);
     });
@@ -102,12 +94,15 @@ export class TemplateService {
     this.selectedTemplateId.next(id);
   }
 
-  // Helper method to compile and render a template with partials
   renderTemplate(content: string, data: any = {}): SafeHtml {
     try {
+      // Convert flat object with dot notation to nested object
+      const nestedData = this.objectPathService.convertToNestedObject(data);
+      console.log('Original data:', data);
+      console.log('Nested data:', nestedData);
+      
       const template = Handlebars.compile(content);
-      const rendered = template(data);
-      // Bypass security and trust the HTML content
+      const rendered = template(nestedData);
       return this.sanitizer.bypassSecurityTrustHtml(rendered);
     } catch (error) {
       console.error('Template rendering error:', error);

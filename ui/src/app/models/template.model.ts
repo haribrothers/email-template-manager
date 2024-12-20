@@ -10,6 +10,7 @@ export interface Template {
 export interface TemplateVariable {
   id: string;
   name: string;
+  path: string;
   type: 'string' | 'number' | 'array' | 'json';
   defaultValue: any;
   description?: string;

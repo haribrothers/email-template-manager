@@ -1,4 +1,10 @@
 <div class="border rounded-lg bg-white shadow-sm flex flex-col h-full overflow-hidden">
     <app-editor-toolbar [editor]="editor" />
     <div #editorElement class="flex-1 p-4 overflow-y-auto"></div>
+    <div #imageFloatingMenu>
+        <app-image-floating-menu [editor]="editor" />
+    </div>
+    <div #textFloatingMenu>
+        <app-text-floating-menu [editor]="editor" />
+    </div>
 </div>

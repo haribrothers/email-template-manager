@@ -89,6 +89,48 @@
   @apply border border-gray-300 p-2;
 }
 
+.ProseMirror td p {
+  @apply my-0;
+}
+
 .ProseMirror blockquote {
   @apply border-l-4 border-gray-300 pl-4 italic my-4;
+}
+
+/* Non-editable content styles */
+.ProseMirror .non-editable {
+  @apply bg-gray-100 cursor-not-allowed opacity-75;
+}
+
+[contenteditable="false"] {
+  @apply select-none pointer-events-none;
+}
+
+/* Image selection styles */
+.ProseMirror img {
+  @apply transition-all duration-200;
+}
+
+.ProseMirror img.ProseMirror-selectednode {
+  @apply outline outline-2 outline-blue-500;
+}
+
+.ProseMirror .image-resizer {
+  @apply absolute w-2 h-2 bg-blue-500 border border-white rounded-full;
+}
+
+.ProseMirror .image-resizer.top-left {
+  @apply top-0 left-0 -translate-x-1/2 -translate-y-1/2 cursor-nw-resize;
+}
+
+.ProseMirror .image-resizer.top-right {
+  @apply top-0 right-0 translate-x-1/2 -translate-y-1/2 cursor-ne-resize;
+}
+
+.ProseMirror .image-resizer.bottom-left {
+  @apply bottom-0 left-0 -translate-x-1/2 translate-y-1/2 cursor-sw-resize;
+}
+
+.ProseMirror .image-resizer.bottom-right {
+  @apply bottom-0 right-0 translate-x-1/2 translate-y-1/2 cursor-se-resize;
 }

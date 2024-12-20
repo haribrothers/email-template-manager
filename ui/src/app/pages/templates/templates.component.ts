@@ -59,6 +59,23 @@ export class TemplatesComponent implements OnInit {
     });
   }
 
+  deleteTemplate(id: string) {
+    if (confirm('Are you sure you want to delete this template?')) {
+      this.templateService.deleteTemplate(id);
+    }
+  }
+
+  duplicateTemplate(template: Template) {
+    const duplicate: Template = {
+      ...template,
+      id: crypto.randomUUID(),
+      name: `${template.name} (Copy)`,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    this.templateService.addTemplate(duplicate);
+  }
+
   private updateTemplate(template: Template) {
     this.templateService.updateTemplate({
       ...template,

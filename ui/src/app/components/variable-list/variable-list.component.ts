@@ -61,7 +61,7 @@ import { TemplateVariable } from '../../models/template.model';
         }
       </div>
     </div>
-  `
+  `,
 })
 export class VariableListComponent {
   @Input() variables: TemplateVariable[] = [];
@@ -82,9 +82,11 @@ export class VariableListComponent {
     }
 
     const term = this.searchTerm.toLowerCase();
-    this.filteredVariables = this.variables.filter(variable =>
-      variable.name.toLowerCase().includes(term) ||
-      variable.description?.toLowerCase().includes(term)
+    this.filteredVariables = this.variables.filter(
+      (variable) =>
+        variable.name.toLowerCase().includes(term) ||
+        variable.path.toLowerCase().includes(term) ||
+        variable.description?.toLowerCase().includes(term)
     );
   }
 }

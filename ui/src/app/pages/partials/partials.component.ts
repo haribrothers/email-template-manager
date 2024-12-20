@@ -33,6 +33,15 @@ export class PartialsComponent {
     this.selectedPartial = { ...partial };
   }
 
+  deletePartial(id: string) {
+    if (confirm('Are you sure you want to delete this partial?')) {
+      this.partialService.deletePartial(id);
+      if (this.selectedPartial?.id === id) {
+        this.selectedPartial = null;
+      }
+    }
+  }
+
   updatePartialName(event: Event) {
     if (!this.selectedPartial) return;
     const name = (event.target as HTMLInputElement).value;
