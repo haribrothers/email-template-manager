@@ -2,18 +2,12 @@
   <div class="bg-white rounded-lg shadow">
     <div class="p-4 border-b flex justify-between items-center">
       <div class="flex-1 max-w-md">
-        <input
-          type="text"
-          [(ngModel)]="searchTerm"
-          placeholder="Search variables..."
-          class="w-full px-3 py-2 border rounded-md focus:ring-primary-500 focus:border-primary-500"
-        />
+        <input type="text" [(ngModel)]="searchTerm" placeholder="Search fields..."
+          class="w-full px-3 py-2 border rounded-md focus:ring-primary-500 focus:border-primary-500" />
       </div>
-      <button
-        (click)="createVariable()"
-        class="ml-4 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
-      >
-        New Variable
+      <button (click)="createVariable()"
+        class="ml-4 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
+        New Fields
       </button>
     </div>
 
@@ -21,34 +15,22 @@
       <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
           <tr>
-            <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Name
             </th>
-            <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Path
             </th>
-            <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Type
             </th>
-            <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Required
             </th>
-            <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Description
             </th>
-            <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Actions
             </th>
           </tr>
@@ -71,13 +53,9 @@
               <div class="text-sm text-gray-500">{{ variable.type }}</div>
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
-              <span
-                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
-                [class.bg-green-100]="variable.required"
-                [class.text-green-800]="variable.required"
-                [class.bg-gray-100]="!variable.required"
-                [class.text-gray-800]="!variable.required"
-              >
+              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                [class.bg-green-100]="variable.required" [class.text-green-800]="variable.required"
+                [class.bg-gray-100]="!variable.required" [class.text-gray-800]="!variable.required">
                 {{ variable.required ? 'Yes' : 'No' }}
               </span>
             </td>
@@ -86,19 +64,11 @@
                 {{ variable.description }}
               </div>
             </td>
-            <td
-              class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
-            >
-              <button
-                (click)="editVariable(variable)"
-                class="text-primary-600 hover:text-primary-900 mr-3"
-              >
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+              <button (click)="editVariable(variable)" class="text-primary-600 hover:text-primary-900 mr-3">
                 Edit
               </button>
-              <button
-                (click)="deleteVariable(variable.id)"
-                class="text-red-600 hover:text-red-900"
-              >
+              <button (click)="deleteVariable(variable.id)" class="text-red-600 hover:text-red-900">
                 Delete
               </button>
             </td>
@@ -108,24 +78,13 @@
       </table>
     </div>
 
-    <app-pagination
-      [currentPage]="currentPage"
-      [pageSize]="pageSize"
-      [totalItems]="filterVariables((variables$ | async) || []).length"
-      (pageChange)="onPageChange($event)"
-    />
+    <app-pagination [currentPage]="currentPage" [pageSize]="pageSize"
+      [totalItems]="filterVariables((variables$ | async) || []).length" (pageChange)="onPageChange($event)" />
   </div>
 </div>
 
 @if (showModal) {
-<app-modal
-  [title]="selectedVariable?.id ? 'Edit Variable' : 'New Variable'"
-  (close)="closeModal()"
->
-  <app-variable-editor
-    [variable]="selectedVariable"
-    (save)="saveVariable($event)"
-    (cancel)="closeModal()"
-  />
+<app-modal [title]="selectedVariable?.id ? 'Edit Fields' : 'New Fields'" (close)="closeModal()">
+  <app-variable-editor [variable]="selectedVariable" (save)="saveVariable($event)" (cancel)="closeModal()" />
 </app-modal>
 }
