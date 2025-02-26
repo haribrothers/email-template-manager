@@ -134,3 +134,15 @@
 .ProseMirror .image-resizer.bottom-right {
   @apply bottom-0 right-0 translate-x-1/2 translate-y-1/2 cursor-se-resize;
 }
+
+.ProseMirror img {
+  @apply max-w-full h-auto select-none;
+}
+
+.ProseMirror img.ProseMirror-selectednode {
+  @apply ring-2 ring-offset-2 ring-blue-500 rounded-sm;
+}
+
+.ProseMirror img:hover {
+  @apply ring-1 ring-offset-1 ring-blue-300 rounded-sm;
+}

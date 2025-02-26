@@ -25,8 +25,8 @@ export class MonacoJsonEditorComponent implements OnInit, OnDestroy {
   private editor: monaco.editor.IStandaloneCodeEditor | null = null;
   private subscription: any;
 
-  async ngOnInit() {
-    await this.initMonaco();
+  ngOnInit() {
+    this.initMonaco();
   }
 
   private async initMonaco() {
@@ -47,12 +47,10 @@ export class MonacoJsonEditorComponent implements OnInit, OnDestroy {
         tabSize: 2
       });
 
-      // Add validation and auto-formatting
       this.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
         this.formatDocument();
       });
 
-      // Listen for changes
       this.subscription = this.editor.onDidChangeModelContent(() => {
         this.onEditorChange();
       });
@@ -73,7 +71,7 @@ export class MonacoJsonEditorComponent implements OnInit, OnDestroy {
 
   private formatDocument() {
     if (!this.editor) return;
-    
+
     try {
       const value = this.editor.getValue();
       const formatted = this.formatJson(value);
@@ -88,10 +86,10 @@ export class MonacoJsonEditorComponent implements OnInit, OnDestroy {
 
     try {
       const value = this.editor.getValue();
-      JSON.parse(value); // Validate JSON
+      JSON.parse(value);
       this.valueChange.emit(value);
     } catch {
-      // Invalid JSON - don't emit
+      // Invalid JSON
     }
   }
 

@@ -32,7 +32,7 @@ export class PreviewPanelComponent implements OnChanges {
   constructor(
     private templateService: TemplateService,
     private pdfService: PdfService
-  ) {}
+  ) { }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['template']) {
@@ -56,8 +56,8 @@ export class PreviewPanelComponent implements OnChanges {
               variable.defaultValue
                 ? JSON.parse(variable.defaultValue)
                 : variable.type === 'array'
-                ? []
-                : {},
+                  ? []
+                  : {},
               null,
               2
             );
@@ -125,7 +125,6 @@ export class PreviewPanelComponent implements OnChanges {
       );
     } catch (error) {
       console.error('Error generating PDF:', error);
-      // Here you could add a toast notification or alert to inform the user
     }
   }
 }

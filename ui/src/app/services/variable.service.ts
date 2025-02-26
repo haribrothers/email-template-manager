@@ -10,7 +10,6 @@ export class VariableService {
   variables$ = this.variables.asObservable();
 
   loadVariables() {
-    // In a real app, this would load from an API
     const savedVariables = localStorage.getItem('templateVariables');
     if (savedVariables) {
       this.variables.next(JSON.parse(savedVariables));

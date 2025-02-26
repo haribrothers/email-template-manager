@@ -2,6 +2,8 @@ import { Component, ViewChild, ElementRef, AfterViewInit, Input, Output, EventEm
 import { CommonModule } from '@angular/common';
 
 import { Editor } from '@tiptap/core';
+import { NodeSelection } from '@tiptap/pm/state';
+
 import StarterKit from '@tiptap/starter-kit';
 import Document from '@tiptap/extension-document';
 import Table from '@tiptap/extension-table';
@@ -17,6 +19,7 @@ import Color from '@tiptap/extension-color';
 import TextAlign from '@tiptap/extension-text-align';
 import FloatingMenu from '@tiptap/extension-floating-menu';
 import BubbleMenu from '@tiptap/extension-bubble-menu';
+import Dropcursor from '@tiptap/extension-dropcursor';
 
 import { NonEditable } from './non-editable.extension';
 import { ImageResize } from './image-resize.extension';
@@ -24,6 +27,7 @@ import { FontSize } from './fontsize.extension';
 import { EditorToolbarComponent } from '../editor-toolbar/editor-toolbar.component';
 import { ImageFloatingMenuComponent } from './image-floating-menu.component';
 import { TextFloatingMenuComponent } from './text-floating-menu.component';
+import { NodeSelectionPlugin } from './node-selection.extension';
 
 @Component({
   selector: 'app-editor',
@@ -59,7 +63,7 @@ export class EditorComponent implements AfterViewInit, OnDestroy, OnChanges {
     blockquote: 'margin: 1em 0; padding-left: 1em; border-left: 4px solid #ccc; color: #666;'
   };
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private cdr: ChangeDetectorRef) { }
 
   ngAfterViewInit() {
     this.editor = new Editor({
@@ -73,13 +77,16 @@ export class EditorComponent implements AfterViewInit, OnDestroy, OnChanges {
         TableRow,
         TableHeader,
         TableCell,
+        NodeSelectionPlugin,
         Image.configure({
           allowBase64: true,
           inline: true,
           HTMLAttributes: {
-            style: 'display: inline-block;',
+            class: 'cursor-pointer',
+            style: 'display: inline-block;cursor: pointer;',
           },
         }),
+        Dropcursor,
         Link.configure({
           openOnClick: false,
         }),
@@ -129,7 +136,7 @@ export class EditorComponent implements AfterViewInit, OnDestroy, OnChanges {
           for (const item of Array.from(items)) {
             if (item.type.indexOf('image') === 0) {
               event.preventDefault();
-              
+
               const blob = item.getAsFile();
               if (blob) {
                 this.handleImageUpload(blob);
@@ -172,21 +179,19 @@ export class EditorComponent implements AfterViewInit, OnDestroy, OnChanges {
     reader.readAsDataURL(file);
   }
 
-   
+
 
   private inlineStyles(html: string): string {
     const template = document.createElement('template');
     template.innerHTML = html;
     const content = template.content;
 
-    // Handle paragraphs with different styles based on context
     content.querySelectorAll('p').forEach(p => {
       const isInTable = p.closest('td, th') !== null;
       const style = isInTable ? this.defaultStyles.tableParagraph : this.defaultStyles.paragraph;
       this.appendStyles(p, style);
     });
 
-    // ... rest of the method remains the same
     content.querySelectorAll('h1').forEach(h1 => {
       this.appendStyles(h1, this.defaultStyles.heading1);
     });
@@ -253,7 +258,7 @@ export class EditorComponent implements AfterViewInit, OnDestroy, OnChanges {
       const regex = /{{&gt;/g;
       const replacement = '{{>';
       const currentContent = this.inlineStyles(this.editor.getHTML()).replace(regex, replacement);
-      
+
       if (newContent !== currentContent) {
         this.skipNextUpdate = true;
         this.editor.commands.setContent(newContent, false);

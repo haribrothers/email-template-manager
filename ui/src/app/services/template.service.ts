@@ -52,7 +52,7 @@ export class TemplateService {
     partialNames.forEach(name => {
       Handlebars.unregisterPartial(name);
     });
-    
+
     const partials = this.partialService.getPartials();
     partials.forEach(partial => {
       const safeName = partial.name.replace(/[^a-zA-Z0-9]/g, '_');
@@ -96,11 +96,10 @@ export class TemplateService {
 
   renderTemplate(content: string, data: any = {}): SafeHtml {
     try {
-      // Convert flat object with dot notation to nested object
       const nestedData = this.objectPathService.convertToNestedObject(data);
       console.log('Original data:', data);
       console.log('Nested data:', nestedData);
-      
+
       const template = Handlebars.compile(content);
       const rendered = template(nestedData);
       return this.sanitizer.bypassSecurityTrustHtml(rendered);

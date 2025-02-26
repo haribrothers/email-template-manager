@@ -153,15 +153,12 @@ export class VariableEditorComponent implements OnInit {
     const type = this.form.get('type')?.value;
     const currentValue = this.form.get('defaultValue')?.value;
 
-    // Reset default value when type changes
     if (type === 'string') {
       this.form.patchValue({ defaultValue: '' });
     } else {
       try {
-        // Try to parse current value as JSON if changing to array/json
         JSON.parse(currentValue);
       } catch {
-        // If parsing fails, set appropriate default
         const defaultValue = type === 'array' ? '[]' : '{}';
         this.form.patchValue({ defaultValue });
       }

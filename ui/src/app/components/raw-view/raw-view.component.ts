@@ -11,7 +11,7 @@ import { Template } from 'src/app/models/template.model';
   templateUrl: './raw-view.component.html',
   styleUrl: './raw-view.component.css'
 })
-export class RawViewComponent  implements OnChanges, OnInit, OnDestroy {
+export class RawViewComponent implements OnChanges, OnInit, OnDestroy {
   @ViewChild('editorContainer', { static: true }) editorContainer!: ElementRef;
 
   @Input() htmlContent = '';
@@ -40,7 +40,7 @@ export class RawViewComponent  implements OnChanges, OnInit, OnDestroy {
   private formatHTML(html: string): string {
     let formatted = '';
     let indent = '';
-    const tab = '    '; // 4 spaces for indentation
+    const tab = '    ';
     const nodes = this.parseHTML(html);
 
     function formatNode(node: Node) {
@@ -52,30 +52,24 @@ export class RawViewComponent  implements OnChanges, OnInit, OnDestroy {
       } else if (node.nodeType === Node.ELEMENT_NODE) {
         const element = node as Element;
         const tagName = element.tagName.toLowerCase();
-        
-        // Start tag
+
         let startTag = `${indent}<${tagName}`;
-        
-        // Add attributes
+
         Array.from(element.attributes).forEach(attr => {
           startTag += ` ${attr.name}="${attr.value}"`;
         });
-        
+
         startTag += '>';
         formatted += startTag + '\n';
 
-        // Increase indent for children
         indent += tab;
-        
-        // Format children
+
         Array.from(element.childNodes).forEach(child => {
           formatNode(child);
         });
-        
-        // Decrease indent
+
         indent = indent.slice(0, -tab.length);
-        
-        // End tag
+
         formatted += `${indent}</${tagName}>\n`;
       }
     }
@@ -93,8 +87,7 @@ export class RawViewComponent  implements OnChanges, OnInit, OnDestroy {
   private async initMonaco() {
     try {
       const monaco = await loader.init();
-      
-      // Format the HTML content
+
       const formattedHTML = this.formatHTML(this.htmlContent);
 
       this.editor = monaco.editor.create(this.editorContainer.nativeElement, {
@@ -123,7 +116,6 @@ export class RawViewComponent  implements OnChanges, OnInit, OnDestroy {
         tabSize: 2
       });
 
-      // Add keyboard shortcut for format document
       this.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyF, () => {
         this.formatDocument();
       });
