@@ -1,8 +1,9 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, Input, Output, EventEmitter, OnDestroy, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-// TipTap editor and extensions
 import { Editor } from '@tiptap/core';
+import { NodeSelection } from '@tiptap/pm/state';
+
 import StarterKit from '@tiptap/starter-kit';
 import Document from '@tiptap/extension-document';
 import Table from '@tiptap/extension-table';
@@ -15,22 +16,30 @@ import Underline from '@tiptap/extension-underline';
 import TextStyle from '@tiptap/extension-text-style';
 import FontFamily from '@tiptap/extension-font-family';
 import Color from '@tiptap/extension-color';
-import TextAlign from '@tiptap/extension-text-align'
+import TextAlign from '@tiptap/extension-text-align';
+import FloatingMenu from '@tiptap/extension-floating-menu';
+import BubbleMenu from '@tiptap/extension-bubble-menu';
+import Dropcursor from '@tiptap/extension-dropcursor';
 
+import { NonEditable } from './non-editable.extension';
+import { ImageResize } from './image-resize.extension';
 import { FontSize } from './fontsize.extension';
 import { EditorToolbarComponent } from '../editor-toolbar/editor-toolbar.component';
-
-
+import { ImageFloatingMenuComponent } from './image-floating-menu.component';
+import { TextFloatingMenuComponent } from './text-floating-menu.component';
+import { NodeSelectionPlugin } from './node-selection.extension';
 
 @Component({
   selector: 'app-editor',
   standalone: true,
-  imports: [CommonModule, EditorToolbarComponent],
+  imports: [CommonModule, EditorToolbarComponent, ImageFloatingMenuComponent, TextFloatingMenuComponent],
   templateUrl: './editor.component.html',
   styleUrl: './editor.component.scss'
 })
 export class EditorComponent implements AfterViewInit, OnDestroy, OnChanges {
   @ViewChild('editorElement') editorElement!: ElementRef;
+  @ViewChild('imageFloatingMenu') imageFloatingMenu!: ElementRef;
+  @ViewChild('textFloatingMenu') textFloatingMenu!: ElementRef;
   @Input() content = '';
   @Output() contentChange = new EventEmitter<string>();
 
@@ -39,6 +48,7 @@ export class EditorComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   private defaultStyles = {
     paragraph: 'margin: 1em 0; line-height: 1.5;',
+    tableParagraph: 'margin: 0; line-height: 1.5;',
     heading1: 'font-size: 2em; margin: 0.67em 0; font-weight: bold;',
     heading2: 'font-size: 1.5em; margin: 0.83em 0; font-weight: bold;',
     heading3: 'font-size: 1.17em; margin: 1em 0; font-weight: bold;',
@@ -47,15 +57,13 @@ export class EditorComponent implements AfterViewInit, OnDestroy, OnChanges {
     heading6: 'font-size: 0.67em; margin: 2.33em 0; font-weight: bold;',
     table: 'border-collapse: collapse; width: 100%; margin: 1em 0;',
     tableCell: 'border: 1px solid #ccc; padding: 8px;',
-    image: 'max-width: 100%; height: auto; margin: 1em 0;',
+    image: 'height: auto; margin: 1em 0;',
     link: 'color: #0066cc; text-decoration: underline;',
     list: 'margin: 1em 0; padding-left: 40px;',
     blockquote: 'margin: 1em 0; padding-left: 1em; border-left: 4px solid #ccc; color: #666;'
   };
 
-
-
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private cdr: ChangeDetectorRef) { }
 
   ngAfterViewInit() {
     this.editor = new Editor({
@@ -69,13 +77,16 @@ export class EditorComponent implements AfterViewInit, OnDestroy, OnChanges {
         TableRow,
         TableHeader,
         TableCell,
+        NodeSelectionPlugin,
         Image.configure({
           allowBase64: true,
           inline: true,
           HTMLAttributes: {
-            style: 'display: inline-block;',
+            class: 'cursor-pointer',
+            style: 'display: inline-block;cursor: pointer;',
           },
         }),
+        Dropcursor,
         Link.configure({
           openOnClick: false,
         }),
@@ -91,6 +102,20 @@ export class EditorComponent implements AfterViewInit, OnDestroy, OnChanges {
         TextAlign.configure({
           types: ['heading', 'paragraph', 'image', 'table', 'blockquote', 'list'],
         }),
+        NonEditable,
+        ImageResize,
+        FloatingMenu.configure({
+          element: this.imageFloatingMenu.nativeElement,
+          shouldShow: ({ editor }) => {
+            return editor.isActive('image');
+          },
+        }),
+        BubbleMenu.configure({
+          element: this.textFloatingMenu.nativeElement,
+          shouldShow: ({ editor, state }) => {
+            return !editor.isActive('image') && !state.selection.empty;
+          },
+        }),
       ],
       content: this.content,
       onUpdate: ({ editor }) => {
@@ -105,14 +130,13 @@ export class EditorComponent implements AfterViewInit, OnDestroy, OnChanges {
       },
       editorProps: {
         handlePaste: (view, event) => {
-          // Handle image paste
           const items = event.clipboardData?.items;
           if (!items) return false;
 
           for (const item of Array.from(items)) {
             if (item.type.indexOf('image') === 0) {
               event.preventDefault();
-              
+
               const blob = item.getAsFile();
               if (blob) {
                 this.handleImageUpload(blob);
@@ -123,7 +147,6 @@ export class EditorComponent implements AfterViewInit, OnDestroy, OnChanges {
           return false;
         },
         handleDrop: (view, event) => {
-          // Handle image drop
           const files = event.dataTransfer?.files;
           if (!files) return false;
 
@@ -138,7 +161,7 @@ export class EditorComponent implements AfterViewInit, OnDestroy, OnChanges {
         },
       },
     });
-    // this.editorElement.nativeElement.addEventListener('paste', this.handlePaste.bind(this));
+
     this.cdr.detectChanges();
   }
 
@@ -156,30 +179,17 @@ export class EditorComponent implements AfterViewInit, OnDestroy, OnChanges {
     reader.readAsDataURL(file);
   }
 
-  private handlePaste(event: ClipboardEvent) {
-    const items = event.clipboardData?.items;
-    if (!items) return;
 
-    for (const item of Array.from(items)) {
-      if (item.type.indexOf('image') === 0) {
-        const blob = item.getAsFile();
-        if (blob) {
-          event.preventDefault();
-          this.handleImageUpload(blob);
-        }
-      }
-    }
-  }
 
   private inlineStyles(html: string): string {
-    // Create a temporary DOM element
     const template = document.createElement('template');
     template.innerHTML = html;
     const content = template.content;
 
-    // Apply default styles to elements
     content.querySelectorAll('p').forEach(p => {
-      this.appendStyles(p, this.defaultStyles.paragraph);
+      const isInTable = p.closest('td, th') !== null;
+      const style = isInTable ? this.defaultStyles.tableParagraph : this.defaultStyles.paragraph;
+      this.appendStyles(p, style);
     });
 
     content.querySelectorAll('h1').forEach(h1 => {
@@ -230,41 +240,12 @@ export class EditorComponent implements AfterViewInit, OnDestroy, OnChanges {
       this.appendStyles(quote, this.defaultStyles.blockquote);
     });
 
-    // Handle text alignment
-    content.querySelectorAll('[style*="text-align"]').forEach(element => {
-      const align = element.getAttribute('data-text-align');
-      if (align) {
-        this.appendStyles(element, `text-align: ${align};`);
-      }
-    });
-
-    // Handle font family
-    content.querySelectorAll('[style*="font-family"]').forEach(element => {
-      const family = element.getAttribute('data-font-family');
-      if (family) {
-        this.appendStyles(element, `font-family: ${family};`);
-      }
-    });
-
-    // Handle font size
-    content.querySelectorAll('[style*="font-size"]').forEach(element => {
-      const size = element.getAttribute('data-font-size');
-      if (size) {
-        this.appendStyles(element, `font-size: ${size};`);
-      }
-    });
-
-    // Handle text color
-    content.querySelectorAll('[style*="color"]').forEach(element => {
-      const color = element.getAttribute('data-color');
-      if (color) {
-        this.appendStyles(element, `color: ${color};`);
-      }
+    content.querySelectorAll('[contenteditable="false"]').forEach(element => {
+      this.appendStyles(element, 'user-select: none; opacity: 0.7;');
     });
 
     return template.innerHTML;
   }
-
   private appendStyles(element: Element, styles: string) {
     const currentStyle = element.getAttribute('style') || '';
     const newStyle = currentStyle ? `${currentStyle}; ${styles}` : styles;
@@ -277,7 +258,7 @@ export class EditorComponent implements AfterViewInit, OnDestroy, OnChanges {
       const regex = /{{&gt;/g;
       const replacement = '{{>';
       const currentContent = this.inlineStyles(this.editor.getHTML()).replace(regex, replacement);
-      
+
       if (newContent !== currentContent) {
         this.skipNextUpdate = true;
         this.editor.commands.setContent(newContent, false);
@@ -286,9 +267,6 @@ export class EditorComponent implements AfterViewInit, OnDestroy, OnChanges {
   }
 
   ngOnDestroy() {
-    if (this.editorElement?.nativeElement) {
-      this.editorElement.nativeElement.removeEventListener('paste', this.handlePaste);
-    }
     this.editor?.destroy();
   }
 }

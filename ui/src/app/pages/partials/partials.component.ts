@@ -15,7 +15,7 @@ export class PartialsComponent {
   partials$ = this.partialService.partials$;
   selectedPartial: TemplatePartial | null = null;
 
-  constructor(private partialService: PartialService) {}
+  constructor(private partialService: PartialService) { }
 
   createPartial() {
     const partial: TemplatePartial = {
@@ -31,6 +31,15 @@ export class PartialsComponent {
 
   selectPartial(partial: TemplatePartial) {
     this.selectedPartial = { ...partial };
+  }
+
+  deletePartial(id: string) {
+    if (confirm('Are you sure you want to delete this partial?')) {
+      this.partialService.deletePartial(id);
+      if (this.selectedPartial?.id === id) {
+        this.selectedPartial = null;
+      }
+    }
   }
 
   updatePartialName(event: Event) {
@@ -58,26 +67,23 @@ export class PartialsComponent {
 
   private updatePartial(updates: Partial<TemplatePartial>) {
     if (!this.selectedPartial) return;
-    
+
     const updated: TemplatePartial = {
       ...this.selectedPartial,
       ...updates,
       updatedAt: new Date()
     };
-    
+
     this.selectedPartial = updated;
     this.partialService.updatePartial(updated);
   }
 
   copyPartialReference() {
     if (!this.selectedPartial) return;
-    
-    // Create the Handlebars partial reference
+
     const reference = `{{> ${this.selectedPartial.name}}}`;
-    
-    // Copy to clipboard
+
     navigator.clipboard.writeText(reference).then(() => {
-      // You could add a toast notification here
       console.log('Partial reference copied to clipboard');
     });
   }

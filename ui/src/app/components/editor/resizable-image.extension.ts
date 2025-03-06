@@ -16,7 +16,6 @@ declare module '@tiptap/core' {
 }
 
 export const ResizableImage = Node.create<ResizableImageOptions>({
-  // ... other configurations remain the same
 
   addAttributes() {
     return {
@@ -73,7 +72,7 @@ export const ResizableImage = Node.create<ResizableImageOptions>({
 
   renderHTML({ HTMLAttributes }) {
     const { style, ...attrs } = HTMLAttributes;
-    return ['div', { class: 'resizable-image-wrapper' }, 
+    return ['div', { class: 'resizable-image-wrapper' },
       ['img', mergeAttributes(this.options.HTMLAttributes, attrs, { style })],
       ['div', { class: 'resize-handle top-left' }],
       ['div', { class: 'resize-handle top-right' }],
@@ -86,5 +85,4 @@ export const ResizableImage = Node.create<ResizableImageOptions>({
     ];
   },
 
-  // ... rest of the extension remains the same
 });

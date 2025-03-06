@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "dev": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch"
   },
@@ -24,6 +25,7 @@
     "@tiptap/extension-color": "^2.9.1",
     "@tiptap/extension-document": "^2.2.4",
     "@tiptap/extension-dropcursor": "^2.2.4",
+    "@tiptap/extension-floating-menu": "^2.2.4",
     "@tiptap/extension-font-family": "^2.9.1",
     "@tiptap/extension-gapcursor": "^2.2.4",
     "@tiptap/extension-image": "^2.2.4",
@@ -40,6 +42,8 @@
     "@tiptap/pm": "^2.2.4",
     "@tiptap/starter-kit": "^2.2.4",
     "handlebars": "^4.7.8",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
     "monaco-editor": "^0.45.0",
     "rxjs": "~7.8.1",
     "tslib": "^2.6.2",
